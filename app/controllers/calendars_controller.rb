@@ -16,7 +16,8 @@ class CalendarsController < ApplicationController
   private
 
   def plan_params
-    params.require(:calendars).permit(:date, :plan)
+    #Issue4
+    params.require(:plan).permit(:date, :plan)
   end
 
   #Issue2編集箇所。
@@ -36,8 +37,15 @@ class CalendarsController < ApplicationController
       plans.each do |plan|
         today_plans.push(plan.plan) if plan.date == @todays_date + x
       end
-      #Issue1編集箇所。
-      days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans}
+
+      wday_num = (@todays_date + x).wday
+      if wday_num >= 7
+        wday_num = wday_num -7
+      end
+
+      wday_name = wdays[wday_num]
+
+      days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans, wday: wday_name}
       @week_days.push(days)
     end
 
